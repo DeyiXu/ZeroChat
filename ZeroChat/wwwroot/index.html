@@ -1,10 +1,117 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <title></title>
+    <style>
+        .rooms {
+            width: 100%;
+            height: 180px;
+            border: 1px solid salmon;
+        }
+
+        .rooms .room {
+            width: 100px;
+            height: 100%;
+            border: 1px solid seagreen;
+            float: left;
+            margin-right: 10px;
+            text-align: center;
+
+        }
+
+        #char-main {
+            margin-top: 20px;
+            height: 500px;
+        }
+
+        #char .char-left {
+            height: 100%;
+            width: 20%;
+            background: sienna;
+            float: left;
+        }
+
+        #char .char-right {
+            height: 100%;
+            width: 80%;
+            float: left;
+        }
+        #user-list{
+            list-style: none;
+            padding: 0;
+        }
+        #user-list li{
+            height: 50px;
+            border: 1px solid black;
+        }
+        .char-content-top{
+            height: 80%;
+            width: 100%;
+            background: rosybrown;
+        }
+        .char-content-bottom{
+            height: 20%;
+            width: 100%;
+        }
+        .char-content-bottom textarea{
+            width: 100%;
+            height: 100%;
+        }
+        #send{
+            float: right;
+        }
+    </style>
 </head>
+
 <body>
-    Hello World!
+    <div class="rooms">
+        <div class="room">
+            <p>1111</p>
+            <p>房间1</p>
+            <p>0人</p>
+            <button class="enter">进入</button>
+        </div>
+        <div class="room">
+            <p>2222</p>
+            <p>房间2</p>
+            <p>0人</p>
+            <button class="enter">进入</button>
+        </div>
+        <div class="room">
+            <p>3333</p>
+            <p>房间3</p>
+            <p>0人</p>
+            <button class="enter">进入</button>
+        </div>
+    </div>
+
+    <div id="char">
+        <h1>房间标题：
+            <span id="char-title">德意洋洋的聊天室</span>
+        </h1>
+        <div id="char-main">
+            <div class="char-left">
+                <h3>用户列表</h3>
+                <ul id="user-list">
+                    <li>张三</li>
+                    <li>李四</li>
+                    <li>王五</li>
+                    <li>赵六</li>
+                </ul>
+            </div>
+            <div class="char-right">
+                <div class="char-content-top">
+                    内容
+                </div>
+                <div class="char-content-bottom">
+                    <textarea></textarea>
+                </div>
+            </div>
+            <button id="send">发送</button>
+        </div>
+    </div>
 </body>
+
 </html>
