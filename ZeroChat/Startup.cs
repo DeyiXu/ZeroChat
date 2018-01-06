@@ -25,9 +25,19 @@ namespace ZeroChat
                 app.UseDeveloperExceptionPage();
             }
 
-            app.Run(async (context) =>
+            app.UseStaticFiles();
+            app.Map("/ws", ChatHandler.Map);
+
+            app.Use(async (context, next) =>
             {
-                await context.Response.WriteAsync("Hello World!");
+                if (context.Request.Path == "/")
+                {
+                    context.Response.Redirect("/index.html");
+                }
+                else
+                {
+                    await next();
+                }
             });
         }
     }
