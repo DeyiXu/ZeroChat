@@ -7,16 +7,10 @@ namespace ZeroChat.Models
         /// <summary>
         /// 用户名称
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
         /// <summary>
-        /// WebSocket
+        /// 房间的连接
         /// </summary>
-        public WebSocket WebSocket { get; set; }
-
-        //多端情况下使用
-        ///// <summary>
-        ///// Socket
-        ///// </summary>
-        //public Socket Socket { get; set; }
+        public UserSocket UserSocket { get; set; }
     }
 }

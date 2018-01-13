@@ -11,15 +11,14 @@
             border: 1px solid salmon;
         }
 
-        .rooms .room {
-            width: 100px;
-            height: 100%;
-            border: 1px solid seagreen;
-            float: left;
-            margin-right: 10px;
-            text-align: center;
-
-        }
+            .rooms .room {
+                width: 100px;
+                height: 100%;
+                border: 1px solid seagreen;
+                float: left;
+                margin-right: 10px;
+                text-align: center;
+            }
 
         #char-main {
             margin-top: 20px;
@@ -38,28 +37,34 @@
             width: 80%;
             float: left;
         }
-        #user-list{
+
+        #user-list {
             list-style: none;
             padding: 0;
         }
-        #user-list li{
-            height: 50px;
-            border: 1px solid black;
-        }
-        .char-content-top{
+
+            #user-list li {
+                height: 50px;
+                border: 1px solid black;
+            }
+
+        .char-content-top {
             height: 80%;
             width: 100%;
             background: rosybrown;
         }
-        .char-content-bottom{
+
+        .char-content-bottom {
             height: 20%;
             width: 100%;
         }
-        .char-content-bottom textarea{
-            width: 100%;
-            height: 100%;
-        }
-        #send{
+
+            .char-content-bottom textarea {
+                width: 100%;
+                height: 100%;
+            }
+
+        #send {
             float: right;
         }
     </style>
@@ -88,7 +93,8 @@
     </div>
 
     <div id="char">
-        <h1>房间标题：
+        <h1>
+            房间标题：
             <span id="char-title">德意洋洋的聊天室</span>
         </h1>
         <div id="char-main">
@@ -112,6 +118,37 @@
             <button id="send">发送</button>
         </div>
     </div>
+
+    <script type="text/javascript">
+        var socket;
+        var uri = "ws://" + window.location.host + "/ws";
+
+        function onLoad() {
+            doConnect();
+        }
+
+        function doConnect() {
+            socket = new WebSocket(uri);
+            socket.onopen = function (e) {
+                console.log("opened " + uri);
+                //socket.send("jinfangjian-1");
+            };
+            socket.onclose = function (e) {
+                console.log("closed");
+            };
+            socket.onmessage = function (e) {
+                console.log("Received: " + e.data);
+            };
+            socket.onerror = function (e) {
+                console.log("Error: " + e.data);
+            };
+           
+        }
+
+        window.onload = onLoad;
+
+    </script>
+
 </body>
 
 </html>

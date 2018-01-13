@@ -5,6 +5,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using ZeroChat.Enums;
 
 namespace ZeroChat.Models
 {
@@ -24,7 +25,7 @@ namespace ZeroChat.Models
         /// <summary>
         /// 聊天室的用户
         /// </summary>
-        public User[] Users { get; private set; }
+        public List<User> Users { get; private set; }
         /// <summary>
         /// 聊天室的最大成员数
         /// </summary>
@@ -41,7 +42,7 @@ namespace ZeroChat.Models
             Id = id;
             Name = name;
             MaxUserCount = maxUserCount;
-            Users = new User[maxUserCount];
+            Users = new List<User>();
         }
 
         //public (bool,string) AddUser(User user)
@@ -52,18 +53,26 @@ namespace ZeroChat.Models
         //}
         public bool AddUser(User user, out string message)
         {
-            message = "";
-            if (Users.Length == MaxUserCount)
+            message = "进入房间成功";
+            if (Users.Count == MaxUserCount)
             {
                 message = "不允许加入聊天室，聊天人数已满！";
                 return false;
             }
             //判断用户是否存在
-            if (Users.Where(s => s.Name == user.Name).First() == null)
+
+            for (int i = 0; i < Users.Count; i++)
             {
-                message = "不允许加入聊天室，用户名已存在！";
-                return false;
+                if (Users[i].Name==user.Name)
+                {
+                    message = "不允许加入聊天室，用户名已存在！";
+                    return false;
+                }
             }
+
+            //添加用户
+            Users.Add(user);
+
             return true;
         }
 
@@ -74,18 +83,19 @@ namespace ZeroChat.Models
         public void DelUser(string name)
         {
             User user = Users.Where(s => s.Name == name).First();
-            user?.WebSocket.Abort();
-            Users = Users.Where(s => s.Name != name).ToArray();
+            user?.UserSocket.WebSocket.Abort();
+            Users = Users.Where(s => s.Name != name).ToList();
         }
+
         /// <summary>
         /// 删除用户
         /// </summary>
-        /// <param name="webSocket">WebSocket</param>
-        public void DelUser(WebSocket webSocket)
+        /// <param name="connectionId">connectionId</param>
+        public void DelUser(string connectionId, SocketEnum socketEnum)
         {
-            User user = Users.Where(s => s.WebSocket.SubProtocol == webSocket.SubProtocol).First();
-            user?.WebSocket.Abort();
-            Users = Users.Where(s => s.WebSocket.SubProtocol != webSocket.SubProtocol).ToArray();
+            User user = Users.Where(s => s.UserSocket.WebSocketConnectionId == connectionId).First();
+            user?.UserSocket.WebSocket.Abort();
+            Users = Users.Where(s => s.UserSocket.WebSocketConnectionId != connectionId).ToList();
         }
 
         /// <summary>
@@ -95,12 +105,16 @@ namespace ZeroChat.Models
         public void Broadcast(string msg)
         {
             byte[] msgBuffer = Encoding.UTF8.GetBytes(msg);
-            for (int i = 0; i < Users.Length; i++)
+            for (int i = 0; i < Users.Count; i++)
             {
-                WebSocket clent = Users[i].WebSocket;
+                if (Users[i] == null)
+                {
+                    break;
+                }
+                WebSocket clent = Users[i].UserSocket.WebSocket;
                 if (clent != null && clent.State == WebSocketState.Open)
                 {
-                    Users[i].WebSocket.SendAsync(msgBuffer, WebSocketMessageType.Text, true, CancellationToken.None);
+                    Users[i].UserSocket.WebSocket.SendAsync(msgBuffer, WebSocketMessageType.Text, true, CancellationToken.None);
                 }
             }
         }
